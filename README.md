@@ -59,7 +59,7 @@ A manual analysis of selected sentenses was conducted to evaluate the initial ca
    Programmatically stream financial headlines from the Hugging Face Reuters dataset. Run a rapid regular expression filter using a targeted warfare lexicon (e.g., "battle", "attack", and less lexicalized like: "bunkerization", "decapitation strike" or "drone swarming") to isolate potential candidates matching the 'ECONOMY IS WAR' conceptual framework.
 
 2. Verification & Ambiguity Isolation (MIP-VU-inspired computational filter)
-   Bypass blind graph mapping by validating candidates using a weak-supervision proxy for the contextual-versus-basic-meaning comparison central to MIP-VU. Compare each headline's sentence embedding against a literal baseline embedding. Filter out highly literal news entries, and capture only the high-entropy "Zone of Ambiguity" cases where the pre-trained model struggles to distinguish literal context from conversational implicature.
+   Bypass blind graph mapping by validating candidates using a weak-supervision proxy for the contextual-versus-basic-meaning comparison central to MIP-VU. Compare each headline's sentence embedding against a literal baseline embedding. Filter out highly literal news entries, and capture only cases where the pre-trained model struggles to distinguish literal context from conversational implicature (an embedding-defined zone of semantic ambiguity).
 
 3. Pragmatic Knowledge Retrieval (MySQL Mapping)
    Route only the validated ambiguous headlines to MySQL database. Query the 'WarMetaphorGraph' relational table using the extracted keyword to pull the precise, structured economic interpretation (e.g., mapping "drone swarming" directly to "highly competitive marketing strategy"). 
