@@ -60,18 +60,16 @@ A manual analysis of selected sentenses was conducted to evaluate the initial ca
 
 2. Candidate Ranking & Ambiguity Isolation (MIPVU-Inspired Context-Minimal Filtering Heuristic)
    To avoid blind keyword-to-ontology mapping, the pipeline ranks candidates using a weak-supervision proxy inspired by the contextual-versus-basic-meaning comparison central to MIPVU. For each target war-domain lemma, the pipeline constructs a context-minimal lemma-level reference representation by passing the target keyword through the transformer encoder without sentence-level lexical context. The resulting hidden-state vector serves as a baseline proxy for the model’s representation of the lemma outside a financial-headline context.
+   This reference representation is compared with the contextualized embedding of the corresponding lemma within a full financial headline. The resulting cosine-distance score quantifies a proxy for contextual semantic displacement from the context-minimal lemma-level baseline. Higher-distance cases are prioritized for ontology lookup as potential cross-domain or metaphorical shifts, while lower-distance cases are retained as a heuristically selected candidate literal-control pool for instruction tuning with contrastive examples.
 
-This reference representation is compared with the contextualized embedding of the corresponding lemma within a full financial headline. The resulting cosine-distance score quantifies a proxy for contextual semantic displacement from the context-minimal lemma-level baseline. Higher-distance cases are prioritized for ontology lookup as potential cross-domain or metaphorical shifts, while lower-distance cases are retained as a heuristically selected candidate literal-control pool for instruction tuning with contrastive examples.
+           2.1 Methodological Limitations of Isolated-Token Vectors
+   It is explicitly acknowledged that passing an isolated lemma through a contextual transformer produces a model-specific, context-minimal representation rather than a verified, discrete word-sense vector. For polysemous terms such as attack, strike, and shield, this representation may encode blended associations across military, financial, legal, sporting, and other domains based on the model’s pretrained distribution, rather than defaulting exclusively to a literal physical-warfare meaning. Contextualized representations are inherently sensitive to surrounding linguistic context, whereas an isolated input supplies little evidence for word-sense disambiguation.
+   The cosine-distance threshold is therefore treated strictly as an automated weak-supervision ranking mechanism for identifying relative contextual displacement, rather than as a definitive, sense-verified metaphor classifier. Consequently, high-distance candidates may include non-metaphorical semantic shifts, and the low-distance literal-control pool may contain conventional or weakly displaced metaphors.
 
-2.1 Methodological Limitations of Isolated-Token Vectors
-    It is explicitly acknowledged that passing an isolated lemma through a contextual transformer produces a model-specific, context-minimal representation rather than a verified, discrete word-sense vector. For polysemous terms such as attack, strike, and shield, this representation may encode blended associations across military, financial, legal, sporting, and other domains based on the model’s pretrained distribution, rather than defaulting exclusively to a literal physical-warfare meaning. Contextualized representations are inherently sensitive to surrounding linguistic context, whereas an isolated input supplies little evidence for word-sense disambiguation.
-
-The cosine-distance threshold is therefore treated strictly as an automated weak-supervision ranking mechanism for identifying relative contextual displacement, rather than as a definitive, sense-verified metaphor classifier. Consequently, high-distance candidates may include non-metaphorical semantic shifts, and the low-distance literal-control pool may contain conventional or weakly displaced metaphors.
-
-3. Pragmatic Knowledge Retrieval (MySQL Mapping)
+4. Pragmatic Knowledge Retrieval (MySQL Mapping)
    Route only the validated ambiguous headlines to MySQL database. Query the 'WarMetaphorGraph' relational table using the extracted keyword to pull the precise, structured economic interpretation (e.g., mapping "drone swarming" directly to "highly competitive marketing strategy"). 
 
-4. Model Realignment (QLoRA Fine-Tuning)
+5. Model Realignment (QLoRA Fine-Tuning)
    Format the ambiguous headlines alongside their retrieved MySQL graph definitions into structured instruction-tuning pairs. Execute a lightweight, parameter-efficient fine-tuning loop (QLoRA) targeting the attention matrices of a small base LLM, permanently teaching it to resolve these pragmatic boundary exceptions.
 
 ---
