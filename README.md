@@ -36,20 +36,25 @@ A manual analysis of selected sentenses was conducted to evaluate the initial ca
 
 ```
 
-[Hugging Face Data Ingestion] 
-           │
-           ▼
-[Step 1: Regex Keyword Anchor] 
-           │
-           ▼
-[Step 2: MIP Vector Distance Filter] ───(High Similarity/Literal)───> [Dropped / Logged]
-           │
-     (Zone of Ambiguity)
-           ▼
-[Step 3: MySQL Graph Augmentation] 
-           │
-           ▼
-[Step 4: QLoRA Fine-Tuning Loop] ───> [Realigned Pragmatic Model Checkpoint]
+               [Text Data]
+                    │
+                    ▼
+          [Step 1: Find War Terms]
+                    │
+                    ▼
+       [Step 2: Rank Contextual Shifts]
+         │                          │
+         ▼                          ▼
+ [Literal Controls]    [Step 3: Map Business Meaning]
+         │                          │
+         └─────────────┬────────────┘
+                       │
+                       ▼
+          [Step 4: QLoRA Fine-Tuning]
+                    │
+                    ▼
+             [Adapted Model]
+
 
 ```
 
