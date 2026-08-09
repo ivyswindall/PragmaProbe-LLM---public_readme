@@ -58,20 +58,14 @@ A manual analysis of selected sentenses was conducted to evaluate the initial ca
 1. Ingestion & Rough Selection (Regex Phase)
    Programmatically stream financial headlines from the Hugging Face Reuters dataset. Run a rapid regular expression filter using a targeted warfare lexicon (e.g., "battle", "attack", and less lexicalized like: "bunkerization", "decapitation strike" or "drone swarming") to isolate potential candidates matching the 'ECONOMY IS WAR' conceptual framework.
 
-2. Candidate Ranking & Ambiguity Isolation (MIPVU-Inspired Context-Minimal Filtering Heuristic)
-   To avoid blind keyword-to-ontology mapping, the pipeline ranks candidates using a weak-supervision proxy inspired by the contextual-versus-basic-meaning comparison central to MIPVU. For each target war-domain lemma, the pipeline constructs a context-minimal lemma-level reference representation by passing the target keyword through the transformer encoder without sentence-level lexical context. The resulting hidden-state vector serves as a baseline proxy for the model’s representation of the lemma outside a financial-headline context.
-   This reference representation is compared with the contextualized embedding of the corresponding lemma within a full financial headline. The resulting cosine-distance score quantifies a proxy for contextual semantic displacement from the context-minimal lemma-level baseline. Higher-distance cases are prioritized for ontology lookup as potential cross-domain or metaphorical shifts, while lower-distance cases are retained as a heuristically selected candidate literal-control pool for instruction tuning with contrastive examples.
+2. Candidate Ranking Through Context-Minimal Semantic Filtering (MIPVU-Inspired Context-Minimal Filtering Heuristic)
+   This step compares each war-domain lemma’s context-minimal transformer representation with its contextualized embedding in a financial headline. Cosine distance is used as a weak-supervision signal to rank potential cross-domain shifts: high-distance cases proceed to ontology lookup, while lower-distance cases are retained as candidate literal controls for instruction tuning.
 
-   2.1 Methodological Limitations of Isolated-Token Vectors
-   It is explicitly acknowledged that passing an isolated lemma through a contextual transformer produces a model-specific, context-minimal representation rather than a verified, discrete word-sense vector. For polysemous terms such as attack, strike, and shield, this representation may encode blended associations across military, financial, legal, sporting, and other domains based on the model’s pretrained distribution, rather than defaulting exclusively to a literal physical-warfare meaning. Contextualized representations are inherently sensitive to surrounding linguistic context, whereas an isolated input supplies little evidence for word-sense disambiguation.
-   The cosine-distance threshold is therefore treated strictly as an automated weak-supervision ranking mechanism for identifying relative contextual displacement, rather than as a definitive, sense-verified metaphor classifier. Consequently, high-distance candidates may include non-metaphorical semantic shifts, and the low-distance literal-control pool may contain conventional or weakly displaced metaphors.
+3. Ontology-Guided Pragmatic Knowledge Retrieval (MySQL Mapping)
+   This step routes high-distance candidate headlines to the WarMetaphorGraph MySQL table, which links war-domain lexical cues to structured business-domain interpretations through typed source–relation–target mappings. These retrieved mappings provide ontology-guided weak supervision for building the instruction-tuning corpus, rather than definitive sentence-level interpretations.
 
-4. Pragmatic Knowledge Retrieval (MySQL Mapping)
-   Route only the validated ambiguous headlines to MySQL database. Query the 'WarMetaphorGraph' relational table using the extracted keyword to pull the precise, structured economic interpretation (e.g., mapping "drone swarming" directly to "highly competitive marketing strategy"). 
-
-5. Model Realignment (QLoRA Fine-Tuning)
-   Format the ambiguous headlines alongside their retrieved MySQL graph definitions into structured instruction-tuning pairs. Execute a lightweight, parameter-efficient fine-tuning loop (QLoRA) targeting the attention matrices of a small base LLM, permanently teaching it to resolve these pragmatic boundary exceptions.
-
+4. Model Realignment Through Ontology-Guided Fine-Tuning (QLoRA)
+   This step converts high-distance metaphor candidates, ontology-retrieved business interpretations, and heuristically selected literal-control examples into varied natural-language instruction examples. A QLoRA adapter is trained through standard cross-entropy instruction tuning, using ontology-guided weak supervision and literal-control examples to adapt the model toward structured financial-metaphor interpretation.
 ---
 
 ## Relational Database Schema (MySQL)
