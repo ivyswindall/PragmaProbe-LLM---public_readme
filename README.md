@@ -55,8 +55,8 @@ A manual analysis of selected sentenses was conducted to evaluate the initial ca
 
 ## Pipeline Execution Steps
 
-1. Ingestion & Rough Selection (Regex Phase)
-   Programmatically stream financial headlines from the Hugging Face Reuters dataset. Run a rapid regular expression filter using a targeted warfare lexicon (e.g., "battle", "attack", and less lexicalized like: "bunkerization", "decapitation strike" or "drone swarming") to isolate potential candidates matching the 'ECONOMY IS WAR' conceptual framework.
+1. Multi-Register Corpus Ingestion and Lexicon-Guided Candidate Extraction
+   This step programmatically ingests text from a heterogeneous corpus of financial journalism, retail-investor forums, and short-form social-media commentary to establish the initial corpus. A regular-expression filter matches predefined war-domain lexical cues in headline and post text, producing a high-recall candidate set for subsequent context-minimal semantic filtering.
 
 2. Candidate Ranking Through Context-Minimal Semantic Filtering (MIPVU-Inspired Context-Minimal Filtering Heuristic)
    This step compares each war-domain lemma’s context-minimal transformer representation with its contextualized embedding in a financial headline. Cosine distance is used as a weak-supervision signal to rank potential cross-domain shifts: high-distance cases proceed to ontology lookup, while lower-distance cases are retained as candidate literal controls for instruction tuning.
