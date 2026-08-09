@@ -56,15 +56,19 @@ A manual analysis of selected sentenses was conducted to evaluate the initial ca
 ## Pipeline Execution Steps
 
 1. Multi-Register Corpus Ingestion and Lexicon-Guided Candidate Extraction
+
    This step programmatically ingests text from a heterogeneous corpus of financial journalism, retail-investor forums, and short-form social-media commentary to establish the initial corpus. A regular-expression filter matches predefined war-domain lexical cues in headline and post text, producing a high-recall candidate set for subsequent context-minimal semantic filtering.
 
 2. Candidate Ranking Through Context-Minimal Semantic Filtering (MIPVU-Inspired Context-Minimal Filtering Heuristic)
+
    This step compares each war-domain lemma’s context-minimal transformer representation with its contextualized embedding in a financial headline. Cosine distance is used as a weak-supervision signal to rank potential cross-domain shifts: high-distance cases proceed to ontology lookup, while lower-distance cases are retained as candidate literal controls for instruction tuning.
 
 3. Ontology-Guided Pragmatic Knowledge Retrieval (MySQL Mapping)
+
    This step routes high-distance candidate headlines to the WarMetaphorGraph MySQL table, which links war-domain lexical cues to structured business-domain interpretations through typed source–relation–target mappings. These retrieved mappings provide ontology-guided weak supervision for building the instruction-tuning corpus, rather than definitive sentence-level interpretations.
 
 4. Model Realignment Through Ontology-Guided Fine-Tuning (QLoRA)
+
    This step converts high-distance metaphor candidates, ontology-retrieved business interpretations, and heuristically selected literal-control examples into varied natural-language instruction examples. A QLoRA adapter is trained through standard cross-entropy instruction tuning, using ontology-guided weak supervision and literal-control examples to adapt the model toward structured financial-metaphor interpretation.
 ---
 
