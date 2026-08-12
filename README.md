@@ -1,5 +1,4 @@
-# PragmaProbe-LLM: Mitigating Literal Traps in LLMs via End-to-End Context-Aware Retrieval and QLoRA Pipeline for Figurative Language Alignment
-
+# PragmaProbe-LLM: Mitigating Literal Traps in LLMs through an End-to-End, Context-Aware Retrieval and LoRA Pipeline for Figurative-Language Alignment in Financial Discourse
 [![Dataset](https://shields.io)](https://huggingface.co)
 [![Database](https://shields.io)](https://mysql.com)
 [![Benchmark](https://shields.io)](https://huggingface.co)
@@ -18,7 +17,7 @@
 
 Pre-trained models frequently suffer from "literal traps"—failing to distinguish between literal physical warfare and metaphorical economic competition, which flouts the Gricean Maxim of Quality (conversational implicature). They rely heavily on statistical patterns and frequency, their inability to interpret nascent or ambiguous metaphors reveals a critical limitation in capturing cross-domain semantic shifts. To overcome this, integrating a structured knowledge graph provides explicit mappings of conceptual domains, allowing the model to ground figurations in relational structures rather than relying solely on surface-level statistical correlations.
 
-By filtering out obvious literal news and isolating the "Zone of Ambiguity" where the model struggles, the pipeline retrieves targeted contextual definitions from a relational MySQL knowledge graph. These structural mappings are converted into instruction-tuning pairs to realign the model's attention matrices via Low-Rank Adaptation (QLoRA). This proof-of-concept demonstrates that grounding NLP workflows in established linguistic theory creates efficient, small-scale alignment loops for downstream domain specialization.
+By filtering out obvious literal news and isolating the "Zone of Ambiguity" where the model struggles, the pipeline retrieves targeted contextual definitions from a relational MySQL knowledge graph. These structural mappings are converted into instruction-tuning pairs to realign the model's attention matrices via Low-Rank Adaptation (LoRA). This proof-of-concept demonstrates that grounding NLP workflows in established linguistic theory creates efficient, small-scale alignment loops for downstream domain specialization.
 
 
 **The PUB Benchmark and Framework assessment**
@@ -50,7 +49,7 @@ A manual analysis of selected sentenses was conducted to evaluate the initial ca
          └─────────────┬────────────┘
                        │
                        ▼
-          [Step 4: QLoRA Fine-Tuning]
+          [Step 4: LoRA Fine-Tuning]
                     │
                     ▼
              [Adapted Model]
@@ -72,9 +71,9 @@ A manual analysis of selected sentenses was conducted to evaluate the initial ca
 
    This step routes high-distance candidate headlines to the WarMetaphorGraph MySQL table, which links war-domain lexical cues to structured business-domain interpretations through typed source–relation–target mappings. These retrieved mappings provide ontology-guided weak supervision for building the instruction-tuning corpus, rather than definitive sentence-level interpretations.
 
-4. Model Realignment Through Ontology-Guided Fine-Tuning (QLoRA)
+4. Model Realignment Through Ontology-Guided Fine-Tuning (LoRA)
 
-   This step converts high-distance metaphor candidates, ontology-retrieved business interpretations, and heuristically selected literal-control examples into varied natural-language instruction examples. A QLoRA adapter is trained through standard cross-entropy instruction tuning, using ontology-guided weak supervision and literal-control examples to adapt the model toward structured financial-metaphor interpretation.
+   This step converts high-distance metaphor candidates, ontology-retrieved business interpretations, and heuristically selected literal-control examples into varied natural-language instruction examples. A LoRA adapter is trained through standard cross-entropy instruction tuning, using ontology-guided weak supervision and literal-control examples to adapt the model toward structured financial-metaphor interpretation.
 ---
 
 ## Relational Database Schema (MySQL)
