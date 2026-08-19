@@ -102,3 +102,5 @@ The **ECONOMY IS WAR** schema serves as an introductory case study. To scale thi
 * **Multi-Domain Mapping**: By ingesting structural mappings from extensive repositories like the **Berkeley Conceptual Metaphor MetaNet** or the **Large Scale Conceptual Metaphor (LCC) Database**, the pipeline can target other vital frameworks (e.g., *POLITICS IS MEDICINE*, *TIME IS MONEY*, or *ARGUMENT IS WAR*).
 * **Cross-Domain Specialization**: Replacing the specialized financial lexicon with these broader relational databases allows the core architecture to systematically clean and align models for political science, legal analysis, or medical communication fields.
 
+## License
+This documentation is licensed under the MIT License. See `LICENSE` for details.
